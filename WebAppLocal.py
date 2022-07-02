@@ -9,55 +9,7 @@ from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.models import load_model
 from joblib import dump, load
 
-#from gsheetsdb import connect
-
-
-#Create a title and subtitle
-st.write("""
-# Powerlifting Raw and Equipped Performance Prediction:
-Predicts powerlifting athletes future performance whether they are raw, non-raw or both!
-""")
-
-#Open and display image
-#maybe it wont work and I have to type the full path
-image = Image.open('imageBack.png')
-st.image(image, caption='Raw vs Non-Raw', use_column_width=True)
-
-movs = ['SQ', 'B', 'DL']
-#recogemos los describe de cada df
-describes = []
-
-movHeaders = ['Squat', 'Bench Press', 'Deadlift']
-
-for indx, mov in enumerate(movs):
-	describes.append(pd.read_csv('dfDescribe/'+mov+'_Describe.csv'))
-	#subheader
-	st.subheader(movHeaders[indx]+' Dataset Description:')
-	st.write(describes[indx])
-
-stringXScaler = 'PredictorScalerFit'
-stringYScaler = 'TargetVarScalerFit'
-#Recogemos los scalers
-xScalers = []
-yScalers = []
-
-for mov in movs:
-	xScalers.append(load('dfScalers/'+stringXScaler+mov))
-	yScalers.append(load('dfScalers/'+stringYScaler+mov))
-
-#ya tenemos los scalers de cada uno
-#xScalers[0] -> ScalerX de SQ, 1 de B y 2 de DL
-#y lo mismo
-
-models = []
-stringModels = 'models/ANNTunnedFinal'
-#Recogemos los modelos de cada uno
-for mov in movs:
-	models.append(load_model(stringModels+mov))
-
-#ya tenemos models[0] es el de SQ, 1 el de B y 2 el de DL
-
-#***Get the feature input from the user!
+#Returns the new input as a df
 def get_user_input():
 	# nombre, initial value, final value, default value
 	#Sex_x = st.sidebar.slider('Sex', 0,1, 0)
@@ -129,15 +81,7 @@ def get_user_input():
 
 	return features
 
-#Store the users input into a variable
-user_input = get_user_input()
-
-#Set a subheader and display the users input
-st.subheader('User Input:')
-st.write(user_input)
-
-targets = ['Best3SquatKg_x', 'Best3BenchKg_x', 'Best3DeadliftKg_x']
-
+#returns the predictions
 def CalculatePreds(newInput, models, xScalers, yScalers):
 	preds = [] 
 	for indx, model in enumerate(models):
@@ -155,23 +99,84 @@ def CalculatePreds(newInput, models, xScalers, yScalers):
 		Predictions=yScalers[indx].inverse_transform(Predictions)
 
 		valor = Predictions[0]
+		print(valor)
 		preds.append(valor)
 
 	return preds
+
+#Create a title and subtitle
+st.write("""
+# Powerlifting Raw and Non-Raw Performance Predictor:
+""")
+
+#Open and display image
+#maybe it wont work and I have to type the full path
+image = Image.open('backgroundCrop.png')
+st.image(image, caption='Raw vs Non-Raw', use_column_width=True)
+st.write("""This web application is capable of predicting the performance of an athlete in squat, bench press or deadlift according to the current athlete's performance and whether or not is wearing equipment (Raw or Non-Raw""")
+
+movs = ['SQ', 'B', 'DL']
+
+stringXScaler = 'PredictorScalerFit'
+stringYScaler = 'TargetVarScalerFit'
+#Recogemos los scalers
+xScalers = []
+yScalers = []
+
+for mov in movs:
+	xScalers.append(load('dfScalers/'+stringXScaler+mov))
+	yScalers.append(load('dfScalers/'+stringYScaler+mov))
+
+#ya tenemos los scalers de cada uno
+#xScalers[0] -> ScalerX de SQ, 1 de B y 2 de DL
+#y lo mismo
+
+models = []
+stringModels = 'models/ANNTunnedFinal'
+#Recogemos los modelos de cada uno
+for mov in movs:
+	models.append(load_model(stringModels+mov))
+
+#ya tenemos models[0] es el de SQ, 1 el de B y 2 el de DL
+
+#Store the users input into a variable
+user_input = get_user_input()
+
+#Set a subheader and display the users input
+st.subheader('Current Performance (User Input):')
+st.write(user_input)
+
+targets = ['Best3SquatKg_x', 'Best3BenchKg_x', 'Best3DeadliftKg_x']
 
 preds = CalculatePreds(user_input, models, xScalers, yScalers)
 #convert to a dataframe to print
 calculated_preds = {}
 
+#column names:
+columnsOutput = ['SquatKg', 'BenchPressKg', 'DeadliftKg']
 for indx, pred in enumerate(preds):
-	calculated_preds[targets[indx]] = pred
+	calculated_preds[columnsOutput[indx]] = pred
 
 #Transform the data into a df
 calculated_predsDF = pd.DataFrame(calculated_preds,index =[0])
 
+#from float to int
+calculated_predsDF = calculated_predsDF[columnsOutput].astype(int)
+
 #Set a subheader and display the classification
 st.subheader('Future exercise performance: ')
 st.write(calculated_predsDF)
+
+
+#recogemos y escribimos los describe de cada df
+describes = []
+movHeaders = ['Squat', 'Bench Press', 'Deadlift']
+
+for indx, mov in enumerate(movs):
+	describes.append(pd.read_csv('dfDescribe/'+mov+'_Describe.csv'))
+	#subheader
+	st.subheader(movHeaders[indx]+' Dataset Description:')
+	st.write(describes[indx])
 
 print("end")
 
