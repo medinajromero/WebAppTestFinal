@@ -9,7 +9,7 @@ from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.models import load_model
 from joblib import dump, load
 
-from gsheetsdb import connect
+#from gsheetsdb import connect
 
 
 #Create a title and subtitle
