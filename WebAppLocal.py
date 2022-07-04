@@ -164,7 +164,7 @@ calculated_predsDF = pd.DataFrame(calculated_preds,index =[0])
 calculated_predsDF = calculated_predsDF[columnsOutput].astype(int)
 
 #Set a subheader and display the classification
-st.subheader('Future exercise performance: ')
+st.subheader('Future Exercise Performance: ')
 st.write(calculated_predsDF)
 
 
