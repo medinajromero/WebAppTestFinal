@@ -113,7 +113,7 @@ st.write("""
 #maybe it wont work and I have to type the full path
 image = Image.open('backgroundCrop.png')
 st.image(image, caption='Raw vs Non-Raw', use_column_width=True)
-st.write("""This web application is capable of predicting the performance of an athlete in squat, bench press or deadlift according to the current athlete's performance and whether or not is wearing equipment (Raw or Non-Raw). HOW TO USE: Please, select or type your metrics on the left sidebar panel and the "Future Exercise Performance" section will display your prediction""")
+st.write("""This web application is capable of predicting the performance of an athlete in squat, bench press or deadlift according to the current athlete's performance and whether or not is wearing equipment (Raw or Non-Raw). \nHOW TO USE: Please, select or type your metrics on the left sidebar panel and the "Future Exercise Performance" section will display your prediction""")
 
 movs = ['SQ', 'B', 'DL']
 
