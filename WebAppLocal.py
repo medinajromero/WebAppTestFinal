@@ -164,11 +164,18 @@ calculated_predsDF = pd.DataFrame(calculated_preds,index =[0])
 calculated_predsDF = calculated_predsDF[columnsOutput].astype(int)
 
 #Set a subheader and display the classification
-st.write("""#Future Exercise Performance (Prediction): """)
+st.write("""
+# Future Exercise Performance (Prediction):
+""")
 st.write(calculated_predsDF)
 
-st.write("""#---------------------------------------------------------------------""")
-st.write("""#Description of each dataset .csv""")
+st.write("""
+# ---------------------------------------------------------------------
+""")
+
+st.write("""
+# Description of each dataset .csv
+""")
 
 #recogemos y escribimos los describe de cada df
 describes = []
