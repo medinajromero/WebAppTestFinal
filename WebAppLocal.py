@@ -164,9 +164,11 @@ calculated_predsDF = pd.DataFrame(calculated_preds,index =[0])
 calculated_predsDF = calculated_predsDF[columnsOutput].astype(int)
 
 #Set a subheader and display the classification
-st.subheader('Future Exercise Performance: ')
+st.write('Future Exercise Performance (Prediction): ')
 st.write(calculated_predsDF)
 
+st.write('--------------------------------------------------------------------- ')
+st.write('Description of each dataset .csv')
 
 #recogemos y escribimos los describe de cada df
 describes = []
@@ -175,7 +177,7 @@ movHeaders = ['Squat', 'Bench Press', 'Deadlift']
 for indx, mov in enumerate(movs):
 	describes.append(pd.read_csv('dfDescribe/'+mov+'_Describe.csv'))
 	#subheader
-	st.subheader(movHeaders[indx]+' Dataset Description:')
+	st.subheader(movHeaders[indx])#+' Dataset Description:')
 	st.write(describes[indx])
 
 print("end")
