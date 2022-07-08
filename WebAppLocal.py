@@ -75,10 +75,6 @@ def get_user_input():
 	#Transform the data into a df
 	features = pd.DataFrame(user_data,index =[0])
 
-	#converting every value to int
-	#for col in features.head():
-	#	features[col] = features[col].astype(str).astype(int)
-
 	return features
 
 #returns the predictions
@@ -89,9 +85,6 @@ def CalculatePreds(newInput, models, xScalers, yScalers):
 		targetToDrop = [x for x in targets if x != targets[indx]]
 		new_entradaDropped = newInput.drop(targetToDrop, axis=1)
 		print(new_entradaDropped.info())
-
-		#for col in new_entradaDropped.head():
-		#	new_entradaDropped[col] = new_entradaDropped[col].astype(str).astype(int)
 
 		X=xScalers[indx].transform(new_entradaDropped)
 		Predictions=model.predict(X)
