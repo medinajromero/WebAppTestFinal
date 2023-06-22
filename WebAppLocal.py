@@ -6,7 +6,8 @@ from PIL import Image
 import streamlit as st
 
 from sklearn.preprocessing import StandardScaler
-from tensorflow.keras.models import load_model
+#from tensorflow.keras.models import load_model
+import tensorflow as tf
 from joblib import dump, load
 
 #Returns the new input as a df
@@ -128,7 +129,7 @@ models = []
 stringModels = 'models/ANNTunnedFinal'
 #Recogemos los modelos de cada uno
 for mov in movs:
-	models.append(load_model(stringModels+mov))
+	models.append(tf.saved_model.load(stringModels+mov)) #models.append(load_model(stringModels+mov))
 
 #ya tenemos models[0] es el de SQ, 1 el de B y 2 el de DL
 
